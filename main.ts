@@ -79,8 +79,8 @@ function run(p: Uint8Array, inp: Uint8Array): { out: Uint8Array; code: number } 
     const next = pc + 1 + imm;
     if (sp < pops) return done(2);
     if (sp - pops + pushes > STACK_MAX) return done(3);
+    const byte = p[pc];
     pc = next;
-    const byte = p[next - 1 - imm];
     switch (byte) {
       case 0x00:
         return done(0);
@@ -189,8 +189,11 @@ function run(p: Uint8Array, inp: Uint8Array): { out: Uint8Array; code: number } 
           case 0x21:
             r = a < b ? 1 : 0;
             break;
-          default:
+          case 0x22:
             r = (a >>> 0) < (b >>> 0) ? 1 : 0;
+            break;
+          default:
+            r = 0;
             break;
         }
         sp -= 2;
